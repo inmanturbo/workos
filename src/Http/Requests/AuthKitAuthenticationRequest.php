@@ -32,11 +32,21 @@ class AuthKitAuthenticationRequest extends FormRequest
             $this->query('code'),
         );
 
-        [$user, $accessToken, $refreshToken] = [
-            $makeUsing($user),
+        [$user, $accessToken, $refreshToken, $organizationId] = [
+            $user->user,
             $user->access_token,
             $user->refresh_token,
+            $user->organization_id,
         ];
+
+        $user = new User(
+            id: $user->id,
+            organizationId: $organizationId,
+            firstName: $user->firstName,
+            lastName: $user->lastName,
+            email: $user->email,
+            avatar: $user->profilePictureUrl,
+        );
 
         $existingUser = $findUsing($user->id);
 
