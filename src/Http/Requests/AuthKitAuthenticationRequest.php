@@ -33,20 +33,11 @@ class AuthKitAuthenticationRequest extends FormRequest
         );
 
         [$user, $accessToken, $refreshToken, $organizationId] = [
-            $user->user,
+            $makeUsing($user),
             $user->access_token,
             $user->refresh_token,
             $user->organization_id,
         ];
-
-        $user = new User(
-            id: $user->id,
-            organizationId: $organizationId,
-            firstName: $user->firstName,
-            lastName: $user->lastName,
-            email: $user->email,
-            avatar: $user->profilePictureUrl,
-        );
 
         $existingUser = $findUsing($user->id);
 
@@ -74,6 +65,7 @@ class AuthKitAuthenticationRequest extends FormRequest
 
         return  app()->make(User::class, [
             'id' => $user->id,
+            'id' => $response->organizationId,
             'firstName' => $user->firstName,
             'lastName' => $user->lastName,
             'email' => $user->email,
